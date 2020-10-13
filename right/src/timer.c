@@ -72,7 +72,10 @@ uint32_t Timer_GetElapsedTimeAndSetCurrentMicros(uint32_t *time)
 
 void Timer_Delay(uint32_t length)
 {
+	uint32_t primask = DisableGlobalIRQ(); // Make sure the write is atomic
     delayLength = length;
+    EnableGlobalIRQ(primask); // Enable interrupts again if they where enabled before - this should make it interrupt safe
+
     while (delayLength) {
         ;
     }
